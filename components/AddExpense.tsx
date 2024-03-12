@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { BsArrowDown } from "react-icons/bs";
 import { FiRotateCcw } from "react-icons/fi";
 import { motion } from "framer-motion";
@@ -5,6 +6,12 @@ import useAppState from "@/hooks/useAppState";
 
 export default function AddExpense() {
   const { data } = useAppState();
+  const queryClient = useQueryClient();
+  const closeExpense = () => {
+    const updateState = { ...data };
+    updateState["isAddingExpense"] = false;
+    queryClient.setQueryData(["state"], updateState);
+  };
   return (
     <>
       <motion.div
@@ -41,7 +48,10 @@ export default function AddExpense() {
             <FiRotateCcw className="text-gray-400" />
           </div>
           <div className="flex gap-2">
-            <button className=" bg-red-200 dark:bg-red-400 px-8  py-3 rounded-md hover:tracking-wider transition-all hover:shadow-md">
+            <button
+              className=" bg-red-200 dark:bg-red-400 px-8  py-3 rounded-md hover:tracking-wider transition-all hover:shadow-md"
+              onClick={closeExpense}
+            >
               Cancel
             </button>
             <button className="bg-black dark:bg-white text-white dark:text-black px-8  py-3 rounded-md hover:tracking-wider transition-all hover:shadow-md">
