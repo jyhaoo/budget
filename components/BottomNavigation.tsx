@@ -1,3 +1,5 @@
+import useAppState from "@/hooks/useAppState";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   HiOutlineChartPie,
   HiOutlineMegaphone,
@@ -5,6 +7,13 @@ import {
 } from "react-icons/hi2";
 
 export default function BottomNaviation() {
+  const queryClient = useQueryClient();
+  const { data } = useAppState();
+  const openExpense = () => {
+    const updateState = { ...data };
+    updateState["isAddingExpense"] = true;
+    queryClient.setQueryData(["state"], updateState);
+  };
   return (
     <div className="fixed bottom-0  w-lg h-18 grid grid-cols-3 bg-white dark:bg-black px-8 sm:px-0 pb-5 border-t pt-5 z-10 dark:border-zinc-600">
       <button>
@@ -15,7 +24,7 @@ export default function BottomNaviation() {
           </div>
         </div>
       </button>
-      <AddExpenseNav />
+      <AddExpenseNav openExpense={openExpense} />
       <button>
         <div className="flex justify-center items-center flex-col group cursor-pointer">
           <div className="flex items-center flex-col  justify-center text-black dark:text-white">
@@ -30,7 +39,10 @@ export default function BottomNaviation() {
 
 const AddExpenseNav = ({ openExpense }: { openExpense: () => void }) => {
   return (
-    <button className="flex justify-center items-center flex-col group cursor-pointer">
+    <button
+      className="flex justify-center items-center flex-col group cursor-pointer"
+      onClick={openExpense}
+    >
       <div className="h-12 w-12 bg-yellow-200 group-hover:bg-yellow-300 rounded-full grid place-content-center shadow-sm transition-all groupgroup-hover:hover:text-black dark:text-black dark:bg-yellow-300">
         <HiOutlinePlus className="h-8 w-8 hover:scale-125 transition-all" />
       </div>
