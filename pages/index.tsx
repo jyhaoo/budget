@@ -1,6 +1,7 @@
 import cn from "../utils/cn";
 import useAppState from "../hooks/useAppState";
 import AddExpense from "@/components/AddExpense";
+import TotalExpense from "@/components/TotalExpense";
 
 export default function Home() {
   const { data } = useAppState();
@@ -14,8 +15,8 @@ export default function Home() {
       >
         <AddExpense />
         <div className="w-full">
-          {/* <TotalExpense />
-          <ListOfExpense /> */}
+          <TotalExpense />
+          {/* <ListOfExpense /> */}
         </div>
       </div>
     </div>
