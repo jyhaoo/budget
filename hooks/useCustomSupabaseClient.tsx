@@ -1,5 +1,7 @@
-import { SupabaseClient, useSupabaseClient } from "@supbase/auth-helpers-react";
-import React from "react";
+import {
+  SupabaseClient,
+  useSupabaseClient,
+} from "@supabase/auth-helpers-react";
 import { Database, GenericSchema } from "../type/schema";
 
 export default function useCustomSupabaseClient() {

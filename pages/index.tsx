@@ -9,9 +9,9 @@ import Redirect from "@/components/Redirect";
 export default function Home() {
   const user = useUser();
   const { data } = useAppState();
-  if (!user) {
-    return <Redirect to="/auth" />;
-  }
+  // if (!user) {
+  //   return <Redirect to="/auth" />;
+  // }
   return (
     <div className="bg-gray-50 dark:bg-gray-900 min-h-screen relative w-full pb-20">
       <div
