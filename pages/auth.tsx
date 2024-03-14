@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import Image from "next/image";
 import cn from "@/utils/cn";
 import { FcGoogle } from "react-icons/fc";
+import Redirect from "@/components/Redirect";
 
 export default function Auth() {
   const supabaseClient = useSupabaseClient();
