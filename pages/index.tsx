@@ -1,11 +1,17 @@
 import cn from "../utils/cn";
+import { useUser } from "@supabase/auth-helpers-react";
 import useAppState from "../hooks/useAppState";
 import AddExpense from "@/components/AddExpense";
 import TotalExpense from "@/components/TotalExpense";
 import ListOfExpense from "@/components/ListOfExpense";
+import Redirect from "@/components/Redirect";
 
 export default function Home() {
+  const user = useUser();
   const { data } = useAppState();
+  if (!user) {
+    return <Redirect to="/auth" />;
+  }
   return (
     <div className="bg-gray-50 dark:bg-gray-900 min-h-screen relative w-full pb-20">
       <div

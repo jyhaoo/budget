@@ -2,7 +2,7 @@ import { useState } from "react";
 import SiteLayout from "@/components/SiteLayout";
 import { Nunito } from "next/font/google";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs";
 import {
   SessionContextProvider,
   Session,
@@ -23,7 +23,7 @@ export default function MyApp({
 }: AppProps<{
   initialSession: Session;
 }>) {
-  const [supabaseClient] = useState(() => createBrowserSupabaseClient());
+  const [supabaseClient] = useState(() => createPagesBrowserClient());
   const [queryClient] = useState(function () {
     return new QueryClient();
   });
