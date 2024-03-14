@@ -7,7 +7,7 @@ import ListOfExpense from "@/components/ListOfExpense";
 import Redirect from "@/components/Redirect";
 
 export default function Home() {
-  const user = useUser();
+  // const user = useUser();
   const { data } = useAppState();
   // if (!user) {
   //   return <Redirect to="/auth" />;

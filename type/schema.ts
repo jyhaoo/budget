@@ -27,6 +27,22 @@ export interface Database {
           created_at?: string;
         };
       };
+      tags: {
+        Row: {
+          created_at: string | null;
+          name: string;
+          user_id: string | null;
+          id: string;
+          public: boolean;
+        };
+        Insert: {
+          created_at?: string | null;
+          name?: string;
+          user_id?: string | null;
+          id?: string;
+          public?: boolean;
+        };
+      };
       total_expense: {
         Row: {
           created_at: string;
@@ -93,6 +109,29 @@ export interface GenericSchema {
         total_expense_id?: string;
         user_id?: string;
         created_at?: string;
+      };
+    };
+    tags: {
+      Row: {
+        created_at: string | null;
+        name: string;
+        user_id: string | null;
+        id: string;
+        public: boolean;
+      };
+      Insert: {
+        created_at?: string | null;
+        name: string;
+        user_id?: string | null;
+        id?: string;
+        public?: boolean;
+      };
+      Update: {
+        created_at?: string | null;
+        name?: string;
+        user_id?: string | null;
+        id?: string;
+        public?: boolean;
       };
     };
     total_expense: {

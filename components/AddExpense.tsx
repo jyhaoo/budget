@@ -1,17 +1,31 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { BsArrowDown } from "react-icons/bs";
 import { FiRotateCcw } from "react-icons/fi";
+import { BsTags } from "react-icons/bs";
 import { motion } from "framer-motion";
 import useAppState from "@/hooks/useAppState";
+import { ITag } from "@/type/index";
+import { useState } from "react";
+import ListTags from "./ListTags";
 
 export default function AddExpense() {
+  const [isSelectTag, setSelectTag] = useState(false);
   const { data } = useAppState();
+  const [tag, setTag] = useState<ITag>();
+
   const queryClient = useQueryClient();
-  const closeExpense = () => {
+
+  const closeAdding = () => {
     const updateState = { ...data };
     updateState["isAddingExpense"] = false;
     queryClient.setQueryData(["state"], updateState);
   };
+
+  const closeTags = () => {
+    closeAdding();
+    setSelectTag(false);
+  };
+
   return (
     <>
       <motion.div
@@ -44,13 +58,17 @@ export default function AddExpense() {
             </div>
           </div>
           <BsArrowDown className="w-6 h-6 text-gray-400" />
-          <div className="flex cursor-pointer hover:tracking-wider transition-all items-center gap-5">
+          <div
+            className="flex cursor-pointer hover:tracking-wider transition-all items-center gap-5"
+            onClick={() => setSelectTag(!isSelectTag)}
+          >
+            <Tag tag={tag} />
             <FiRotateCcw className="text-gray-400" />
           </div>
           <div className="flex gap-2">
             <button
               className=" bg-red-200 dark:bg-red-400 px-8  py-3 rounded-md hover:tracking-wider transition-all hover:shadow-md"
-              onClick={closeExpense}
+              onClick={closeAdding}
             >
               Cancel
             </button>
@@ -60,6 +78,33 @@ export default function AddExpense() {
           </div>
         </div>
       </motion.div>
+      <ListTags
+        isSelectTag={isSelectTag}
+        closeTag={() => {
+          setSelectTag(false);
+        }}
+        selectTag={(tag: ITag) => {
+          setTag(tag);
+        }}
+      />
     </>
   );
 }
+
+const Tag = ({ tag }: { tag: ITag | undefined }) => {
+  if (tag) {
+    let name = tag?.name.split(" ");
+    return (
+      <div className="flex gap-5 text-xl items-center">
+        <span>{name[0]}</span>
+        <h1>{name[1]}</h1>
+      </div>
+    );
+  }
+  return (
+    <div className="flex gap-5 text-xl items-center text-gray-400">
+      <BsTags />
+      <h1>select your tag</h1>
+    </div>
+  );
+};
