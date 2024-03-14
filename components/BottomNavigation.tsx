@@ -6,18 +6,30 @@ import {
   HiOutlineMegaphone,
   HiOutlinePlus,
 } from "react-icons/hi2";
+import { useRouter } from "next/router";
 
 export default function BottomNaviation() {
   const queryClient = useQueryClient();
+  const router = useRouter();
   const { data } = useAppState();
   const openExpense = () => {
     const updateState = { ...data };
     updateState["isAddingExpense"] = true;
     queryClient.setQueryData(["state"], updateState);
   };
+
+  const navigate = (path: string) => {
+    router.push(path);
+    if (router.pathname !== path && data?.isAddingExpense) {
+      const updatedState = { ...data };
+      updatedState["isAddingExpense"] = true;
+      queryClient.setQueryData(["state"], updatedState);
+    }
+  };
+
   return (
     <div className="fixed bottom-0  w-lg h-18 grid grid-cols-3 bg-white dark:bg-black px-8 sm:px-0 pb-5 border-t pt-5 z-10 dark:border-zinc-600">
-      <button>
+      <button onClick={() => navigate("/summary")}>
         <div className="flex justify-center items-center flex-col group cursor-pointer">
           <div
             className={cn(
