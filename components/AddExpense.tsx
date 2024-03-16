@@ -5,15 +5,29 @@ import { BsTags } from "react-icons/bs";
 import { motion } from "framer-motion";
 import useAppState from "@/hooks/useAppState";
 import { ITag } from "@/type/index";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ListTags from "./ListTags";
+import { toast, Toaster } from "react-hot-toast";
+import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
+import ConfirmExpense from "./ConfirmExpense";
 
 export default function AddExpense() {
   const [isSelectTag, setSelectTag] = useState(false);
   const { data } = useAppState();
   const [tag, setTag] = useState<ITag>();
+  const [isConfirm, setIsConfirm] = useState(false);
+  const [adding, setAdding] = useState(false);
 
+  const inputRef = useRef() as React.MutableRefObject<HTMLInputElement>;
+  const user = useUser();
+  const supabaseClient = useSupabaseClient();
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (data?.isAddingExpense) {
+      inputRef.current.focus();
+    }
+  }, [data?.isAddingExpense]);
 
   const closeAdding = () => {
     const updateState = { ...data };
@@ -24,6 +38,112 @@ export default function AddExpense() {
   const closeTags = () => {
     closeAdding();
     setSelectTag(false);
+  };
+
+  const submitExpense = async () => {
+    setAdding(true);
+    if (validateInput()) {
+      const amount = parseFloat(inputRef.current.value);
+
+      const date = new Date();
+      const firstDay = new Date(
+        data.getFullYear(),
+        date.getMonth(),
+        1
+      ).toISOString();
+      const lastDay = new Date(
+        date.getFullYear(),
+        date.getMonth() + 1,
+        0
+      ).toISOString();
+
+      let total_expense = await supabaseClient
+        .from("total_expense")
+        .select()
+        .lte("created_at", lastDay)
+        .gte("created_at", firstDay)
+        .single();
+
+      if (!total_expense.data) {
+        total_expense = await supabaseClient
+          .from("total_expense")
+          .insert({
+            amount,
+            user_id: user?.id,
+          })
+          .select()
+          .single();
+
+        if (total_expense.error) {
+          setAdding(false);
+          toast.error(total_expense.error.message);
+          return;
+        }
+      } else {
+        total_expense = await supabaseClient
+          .from("total_expense")
+          .update({ amount: total_expense.data.amount + amount })
+          .eq("id", total_expense.data.id)
+          .select()
+          .single();
+
+        if (total_expense.error) {
+          setAdding(false);
+          toast.error(total_expense.error.message);
+          return;
+        }
+      }
+
+      const expense = {
+        tag_id: tag?.id,
+        amount: parseFloat(inputRef.current.value),
+        user_id: user?.id,
+        total_expense_id: total_expense.data.id,
+      };
+
+      const { error } = await supabaseClient
+        .from("expense")
+        .insert(expense)
+        .select();
+
+      if (error) {
+        setAdding(false);
+        return toast.error(error.message);
+      }
+
+      setAdding(false);
+      toast.success("New expense has been created.");
+      queryClient.invalidateQueries(["expenses"]);
+      inputRef.current.value = "";
+      setIsConfirm(false);
+      closeAdding();
+    }
+  };
+
+  const handleOnNext = () => {
+    if (validateInput()) {
+      setIsConfirm(true);
+    }
+  };
+
+  const validateInput = () => {
+    if (!tag) {
+      setAdding(false);
+      toast.error("Missing a tag");
+      return false;
+    }
+    const amount = parseFloat(inputRef.current.value);
+
+    if (!amount || amount <= 0) {
+      setAdding(false);
+      toast.error("Amount should be larger than 0.");
+      return false;
+    }
+    return true;
+  };
+
+  const handleOnCancel = () => {
+    setIsConfirm(false);
   };
 
   return (
@@ -72,7 +192,10 @@ export default function AddExpense() {
             >
               Cancel
             </button>
-            <button className="bg-black dark:bg-white text-white dark:text-black px-8  py-3 rounded-md hover:tracking-wider transition-all hover:shadow-md">
+            <button
+              className="bg-black dark:bg-white text-white dark:text-black px-8  py-3 rounded-md hover:tracking-wider transition-all hover:shadow-md"
+              onClick={handleOnNext}
+            >
               Next
             </button>
           </div>
@@ -86,6 +209,14 @@ export default function AddExpense() {
         selectTag={(tag: ITag) => {
           setTag(tag);
         }}
+      />
+      <ConfirmExpense
+        isConfirm={isConfirm}
+        amount={inputRef.current ? inputRef.current.value : "0"}
+        tag={tag?.name.split(" ") || ["", ""]}
+        submitExpense={submitExpense}
+        adding={adding}
+        handleOnCancel={handleOnCancel}
       />
     </>
   );

@@ -10,9 +10,9 @@ export default function summary() {
   const user = useUser();
   const { data, isLoading } = useExpenses();
 
-  //   if (!user) {
-  //     return <Redirect to="/auth" />;
-  //   }
+  if (!user) {
+    return <Redirect to="/auth" />;
+  }
 
   if (isLoading) {
     return <></>;
