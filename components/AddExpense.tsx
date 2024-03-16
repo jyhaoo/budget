@@ -23,11 +23,11 @@ export default function AddExpense() {
   const supabaseClient = useSupabaseClient();
   const queryClient = useQueryClient();
 
-  useEffect(() => {
-    if (data?.isAddingExpense) {
-      inputRef.current.focus();
-    }
-  }, [data?.isAddingExpense]);
+  // useEffect(() => {
+  //   if (data?.isAddingExpense) {
+  //     inputRef.current.focus();
+  //   }
+  // }, [data?.isAddingExpense]);
 
   const closeAdding = () => {
     const updateState = { ...data };

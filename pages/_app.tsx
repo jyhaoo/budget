@@ -11,6 +11,7 @@ import {
 import { Database } from "../type/schema";
 import type { AppProps } from "next/app";
 import "./globals.css";
+import SEO from "@/components/SEO/index";
 
 const nunito = Nunito({
   subsets: ["latin"],
@@ -29,6 +30,7 @@ export default function MyApp({
   });
   return (
     <>
+      <SEO />
       <SessionContextProvider
         supabaseClient={
           supabaseClient as SupabaseClient<Database, "public", any>
