@@ -18,7 +18,7 @@ Budget PWA that keeps track of your budget and stores the information in supabas
 ### Index page:
 
 Shows total expense alongside the most recent purchases
-![Index Screenshot](/images/Index.pdf)
+![Index Screenshot](/images/Index.png?raw=true)
 
 ## How to run
 
