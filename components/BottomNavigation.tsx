@@ -28,12 +28,15 @@ export default function BottomNaviation() {
   };
 
   return (
-    <div className="fixed bottom-0  w-lg h-18 grid grid-cols-3 bg-white dark:bg-black px-8 sm:px-0 pb-5 border-t pt-5 z-10 dark:border-zinc-600">
+    <div className="fixed bottom-0  w-lg h-18 grid grid-cols-3 bg-white  px-8 sm:px-0 pb-5 border-t pt-5 z-10 dark:border-zinc-600">
       <button onClick={() => navigate("/summary")}>
         <div className="flex justify-center items-center flex-col group cursor-pointer">
           <div
             className={cn(
-              "flex items-center flex-col  justify-center text-black dark:text-white"
+              "flex items-center flex-col  justify-center",
+              router.pathname === "/summary"
+                ? "text-black dark:text-white"
+                : "text-gray-500 dark:text-gray-400"
             )}
           >
             <HiOutlineChartPie className="h-6 w-6 group-hover:scale-125 transition-all " />
@@ -42,11 +45,14 @@ export default function BottomNaviation() {
         </div>
       </button>
       <AddExpenseNav openExpense={openExpense} />
-      <button>
+      <button onClick={() => navigate("/logs")}>
         <div className="flex justify-center items-center flex-col group cursor-pointer">
           <div
             className={cn(
-              "flex items-center flex-col  justify-center text-black dark:text-white"
+              "flex items-center flex-col  justify-center ",
+              router.pathname === "/logs"
+                ? "text-black dark:text-white"
+                : "text-gray-500 dark:text-gray-400"
             )}
           >
             <HiOutlineMegaphone className="h-6 w-6 group-hover:scale-125 transition-all" />

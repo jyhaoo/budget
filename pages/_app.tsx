@@ -12,6 +12,7 @@ import { Database } from "../type/schema";
 import type { AppProps } from "next/app";
 import "./globals.css";
 import SEO from "@/components/SEO/index";
+import { ThemeProvider } from "next-themes";
 
 const nunito = Nunito({
   subsets: ["latin"],
@@ -38,11 +39,13 @@ export default function MyApp({
         initialSession={pageProps.initialSession}
       >
         <QueryClientProvider client={queryClient}>
-          <main className={nunito.className}>
-            <SiteLayout>
-              <Component {...pageProps} />
-            </SiteLayout>
-          </main>
+          <ThemeProvider attribute="class" defaultTheme="light">
+            <main className={nunito.className}>
+              <SiteLayout>
+                <Component {...pageProps} />
+              </SiteLayout>
+            </main>
+          </ThemeProvider>
         </QueryClientProvider>
       </SessionContextProvider>
     </>
